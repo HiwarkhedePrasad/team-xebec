@@ -21,15 +21,16 @@ export default function Home() {
     const numStars = 150;
     const mouse = { x: null, y: null };
     
-    // --- OPTIMIZATION 1: Pre-calculate squared distances ---
+    // Pre-calculate squared distances
     const connectionDistance = 150;
     const connectionDistSq = connectionDistance * connectionDistance;
     const mouseMaxDist = connectionDistance * 1.5;
     const mouseMaxDistSq = mouseMaxDist * mouseMaxDist;
 
-    // --- Star Class (Unchanged) ---
+    // --- Star Class (with new 'id' property) ---
     class Star {
-      constructor() {
+      constructor(id) {
+        this.id = id; // Unique ID to prevent double-checking
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2 + 1;
@@ -53,39 +54,71 @@ export default function Home() {
     }
 
     for (let i = 0; i < numStars; i++) {
-      stars.push(new Star());
+      stars.push(new Star(i)); // Pass in the ID
     }
 
-    // --- OPTIMIZATION 2: Combined Event Handlers ---
-    
-    const showCursor = () => {
-      cursor.style.opacity = '1';
-    };
-    const hideCursor = () => {
-      cursor.style.opacity = '0';
-    };
+    // --- OPTIMIZATION: Spatial Hash Grid ---
+    class SpatialHashGrid {
+      constructor(cellSize) {
+        this.cellSize = cellSize;
+        this.grid = new Map();
+      }
 
-    // One handler for window mousemove
+      _getKey(x, y) {
+        const cellX = Math.floor(x / this.cellSize);
+        const cellY = Math.floor(y / this.cellSize);
+        return `${cellX},${cellY}`;
+      }
+
+      clear() {
+        this.grid.clear();
+      }
+
+      insert(star) {
+        const key = this._getKey(star.x, star.y);
+        if (!this.grid.has(key)) {
+          this.grid.set(key, []);
+        }
+        this.grid.get(key).push(star);
+      }
+
+      // Get all stars from the 9-cell area (self + 8 neighbors)
+      getNearby(x, y) {
+        const cellX = Math.floor(x / this.cellSize);
+        const cellY = Math.floor(y / this.cellSize);
+        const nearbyStars = [];
+
+        for (let i = -1; i <= 1; i++) {
+          for (let j = -1; j <= 1; j++) {
+            const key = `${cellX + i},${cellY + j}`;
+            if (this.grid.has(key)) {
+              nearbyStars.push(...this.grid.get(key));
+            }
+          }
+        }
+        return nearbyStars;
+      }
+    }
+
+    // Create the grid instance. The cell size MUST be >= connectionDistance
+    const grid = new SpatialHashGrid(connectionDistance);
+
+    // --- Combined Event Handlers (Unchanged) ---
+    const showCursor = () => { cursor.style.opacity = '1'; };
+    const hideCursor = () => { cursor.style.opacity = '0'; };
+
     const handleWindowMouseMove = (e) => {
-      // Update star animation mouse coordinates
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      
-      // Update custom cursor position
       cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate3d(-50%, -50%, 0)`;
     };
     
-    // One handler for window mouseleave
     const handleWindowMouseLeave = () => {
-      // Reset star animation mouse
       mouse.x = null;
       mouse.y = null;
-      
-      // Hide the custom cursor
       hideCursor();
     };
 
-    // --- OPTIMIZATION 3: Add { passive: true } ---
     window.addEventListener('mousemove', handleWindowMouseMove, { passive: true });
     window.addEventListener('mouseleave', handleWindowMouseLeave, { passive: true });
 
@@ -96,52 +129,63 @@ export default function Home() {
     });
     
 
+    // --- Main Animation Loop (Refactored) ---
     const animate = () => {
+      // 1. Clear canvas and grid
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      grid.clear();
 
+      // 2. Update, draw, and insert stars into the grid
       stars.forEach((star) => {
         star.update();
         star.draw();
+        grid.insert(star);
       });
 
-      for (let i = 0; i < stars.length; i++) {
-        for (let j = i + 1; j < stars.length; j++) {
-          const dx = stars[i].x - stars[j].x;
-          const dy = stars[i].y - stars[j].y;
-          
-          // --- OPTIMIZATION 1: Use squared distance ---
-          const distSq = dx * dx + dy * dy;
+      // 3. Check Star-to-Star connections (O(n*k) - FAST)
+      ctx.lineWidth = 0.5;
+      stars.forEach((star) => {
+        const neighbors = grid.getNearby(star.x, star.y);
+        
+        neighbors.forEach((neighbor) => {
+          // Use ID check to ensure we only connect a pair once
+          if (star.id < neighbor.id) {
+            const dx = star.x - neighbor.x;
+            const dy = star.y - neighbor.y;
+            const distSq = dx * dx + dy * dy;
 
-          if (distSq < connectionDistSq) {
-            // Calculate opacity based on squared distance (avoids sqrt)
-            const opacity = 0.15 * (1 - distSq / connectionDistSq);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(stars[i].x, stars[i].y);
-            ctx.lineTo(stars[j].x, stars[j].y);
-            ctx.stroke();
+            if (distSq < connectionDistSq) {
+              const opacity = 0.15 * (1 - distSq / connectionDistSq);
+              ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+              ctx.beginPath();
+              ctx.moveTo(star.x, star.y);
+              ctx.lineTo(neighbor.x, neighbor.y);
+              ctx.stroke();
+            }
           }
-        }
+        });
+      });
 
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = stars[i].x - mouse.x;
-          const dy = stars[i].y - mouse.y;
-          
-          // --- OPTIMIZATION 1: Use squared distance ---
+      // 4. Check Star-to-Mouse connections (O(k) - FAST)
+      if (mouse.x !== null && mouse.y !== null) {
+        ctx.lineWidth = 1;
+        // Get only stars near the mouse
+        const nearbyStars = grid.getNearby(mouse.x, mouse.y);
+        
+        nearbyStars.forEach((star) => {
+          const dx = star.x - mouse.x;
+          const dy = star.y - mouse.y;
           const distSq = dx * dx + dy * dy;
 
           if (distSq < mouseMaxDistSq) {
-            // Calculate opacity based on squared distance (avoids sqrt)
             const opacity = 0.3 * (1 - distSq / mouseMaxDistSq);
             ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
-            ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.moveTo(stars[i].x, stars[i].y);
+            ctx.moveTo(star.x, star.y);
             ctx.lineTo(mouse.x, mouse.y);
             ctx.stroke();
           }
-        }
+        });
       }
 
       requestAnimationFrame(animate);
@@ -169,7 +213,7 @@ export default function Home() {
   }, []);
 
   return (
-    // Main wrapper (no cursor-none)
+    // Main wrapper
     <div className="min-h-screen bg-gradient-to-br from-black to-zinc-900 flex items-center justify-center relative overflow-hidden">
       <canvas
         ref={canvasRef}
@@ -177,12 +221,10 @@ export default function Home() {
       />
       <div ref={cursorRef} className="custom-cursor" />
 
-      {/* Main Content */}
+      {/* Main Content (Unchanged) */}
       <div className="z-10 text-center px-6 max-w-5xl">
-        {/* Add 'invert-hover' to all interactive text */}
         <h1 
           className="text-7xl md:text-9xl font-bold tracking-wider mb-6 opacity-0 invert-hover"
-          // This is the line that was broken
           style={{ 
             fontFamily: 'Georgia, serif',
             animation: 'fadeIn 1s ease-out forwards'
@@ -195,7 +237,6 @@ export default function Home() {
         <div className="mb-12 space-y-4">
           <p 
             className="text-xl md:text-3xl font-light tracking-widest text-gray-300 opacity-0 invert-hover"
-            // This is the line that was broken
             style={{ animation: 'fadeIn 1s ease-out 0.2s forwards' }}
           >
             TEAM UNDER CONSTRUCTION
@@ -204,7 +245,6 @@ export default function Home() {
             <div className="h-px w-16 bg-gradient-to-r from-transparent to-white" />
             <p 
               className="text-lg md:text-2xl font-light tracking-widest text-white opacity-0 invert-hover"
-              // This is the line that was broken
               style={{ animation: 'fadeIn 1s ease-out 0.4s forwards' }}
             >
               WE'LL BE LIVE SOON
@@ -214,7 +254,6 @@ export default function Home() {
         </div>
         <p 
           className="text-base md:text-lg text-gray-400 font-light max-w-2xl mx-auto mb-16 leading-relaxed opacity-0 invert-hover"
-          // This is the line that was broken
           style={{ animation: 'fadeIn 1s ease-out 0.6s forwards' }}
         >
           Something extraordinary is in the making. Our team is crafting an experience 
@@ -222,7 +261,6 @@ export default function Home() {
         </p>
         <div 
           className="flex items-center justify-center gap-2 opacity-0"
-          // This is the line that was broken
           style={{ animation: 'fadeIn 1s ease-out 0.8s forwards' }}
         >
           <div className="w-2 h-2 bg-white rounded-full animate-bounce" />
@@ -231,6 +269,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* CSS (Unchanged) */}
       <style dangerouslySetInnerHTML={{__html: `
         .invert-hover:hover {
           cursor: none;
@@ -250,8 +289,6 @@ export default function Home() {
           opacity: 0; 
           transform: translate3d(0, 0, 0) translate3d(-50%, -50%, 0);
           transition: opacity 0.3s ease-out;
-          
-          /* --- OPTIMIZATION 4: Add will-change --- */
           will-change: transform;
         }
       

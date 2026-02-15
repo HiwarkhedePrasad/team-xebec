@@ -137,7 +137,7 @@ export default function Home() {
                 subtitle="Innovation Lab"
                 icon={<Network className="w-5 h-5"/>}
             >
-               Continually iterating on novel architectures. Winners of Smart India Hackathon 2025.
+               Continually iterating on novel architectures. 
                Active research into digital-physical bridging systems.
             </BentoCard>
         </BentoGrid>

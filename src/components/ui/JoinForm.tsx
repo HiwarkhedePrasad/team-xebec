@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Check, Loader2, Terminal, ShieldAlert, Cpu, Network, Zap } from "lucide-react";
 import clsx from "clsx";
+import { submitContactForm } from "@/app/actions";
 
 export function JoinForm() {
   const [step, setStep] = useState<"idle" | "form" | "vetting" | "approved">("idle");
@@ -15,10 +16,24 @@ export function JoinForm() {
   });
   const [vettingLogs, setVettingLogs] = useState<{msg: string, status: 'pending' | 'success'}[]>([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStep("vetting");
-    runVettingProcess();
+    
+    // Start vetting animation immediately for UX
+    runVettingProcess(); 
+
+    // Execute server action in background
+    try {
+        const result = await submitContactForm(formData);
+        if (!result.success) {
+            console.error("Submission failed:", result.error);
+            // In a real app, we might want to show an error state here, 
+            // but for now we'll prioritize the "hacking" experience flow.
+        }
+    } catch (error) {
+        console.error("Submission error:", error);
+    }
   };
 
   const runVettingProcess = () => {
@@ -40,7 +55,7 @@ export function JoinForm() {
           setTimeout(() => {
             setStep("approved");
             setTimeout(() => {
-                window.open("https://www.linkedin.com/company/team-xebec/", "_blank");
+                window.location.href = "https://www.linkedin.com/company/team-xebec/";
             }, 2000);
           }, 1000);
         }

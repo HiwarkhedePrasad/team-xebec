@@ -19,7 +19,6 @@ import { BentoGrid, BentoCard } from "@/components/ui/BentoGrid";
 import { SpecSheet } from "@/components/ui/SpecSheet";
 import { JoinForm } from "@/components/ui/JoinForm";
 import { AwardsSection } from "@/components/ui/AwardsSection";
-import { TeamSection } from "@/components/ui/TeamSection";
 
 export default function Home() {
   return (
@@ -151,7 +150,6 @@ export default function Home() {
         <AwardsSection />
       </div>
 
-
       {/* ═══════════════════════════════════════════════════════ */}
       {/* PHASE 4: THE PROOF (ENGINEERING LOGS)                  */}
       {/* ═══════════════════════════════════════════════════════ */}
@@ -226,12 +224,7 @@ export default function Home() {
 
       </section>
 
-      {/* ═══════════════════════════════════════════════════════ */}
-      {/* PHASE 5: THE ENGINEERS (TEAM)                          */}
-      {/* ═══════════════════════════════════════════════════════ */}
-      <div id="team">
-        <TeamSection />
-      </div>
+
 
       {/* ═══════════════════════════════════════════════════════ */}
       {/* PHASE 6: THE ACTION (RECRUITMENT)                      */}

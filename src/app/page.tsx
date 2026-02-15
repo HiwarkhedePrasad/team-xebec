@@ -2,255 +2,314 @@
 
 import { motion } from "framer-motion";
 import { 
-  Cpu, 
   Network, 
   Terminal as TerminalIcon, 
   Zap, 
-  Beaker,
+  Cpu,
   Github,
   Mail,
-  FileText
+  Linkedin,
+  Activity,
+  ExternalLink
 } from "lucide-react";
 import Link from "next/link";
-
-import { Section } from "@/components/ui/Section";
-import { Terminal } from "@/components/ui/Terminal";
-import { Grid } from "@/components/ui/Grid";
-import { ProjectItem } from "@/components/ui/ProjectItem";
-import { DemoPanel } from "@/components/ui/DemoPanel";
+import { Navbar } from "@/components/ui/Navbar";
+import { PerspectiveStack } from "@/components/ui/PerspectiveStack";
+import { BentoGrid, BentoCard } from "@/components/ui/BentoGrid";
+import { SpecSheet } from "@/components/ui/SpecSheet";
 import { JoinForm } from "@/components/ui/JoinForm";
+import { AwardsSection } from "@/components/ui/AwardsSection";
+import { TeamSection } from "@/components/ui/TeamSection";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-foreground selection:text-background">
       
-      {/* 1. Hero Section */}
-      <Section className="min-h-[80vh] flex flex-col justify-center">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-6">
-              Engineering <br/>
-              <span className="text-muted-foreground">intelligent software systems.</span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground/80 max-w-lg mb-8 leading-relaxed">
-              Team Xebec builds infrastructure, tooling, and applied AI systems focused on performance, architecture, and real-world reliability.
-            </p>
-            <div className="flex gap-4">
-              {/* No CTA, credibility first */}
-              <div className="flex items-center gap-2 text-sm text-muted-foreground font-mono">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                Systems Operational
-              </div>
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex justify-end"
-          >
-            <Terminal />
-          </motion.div>
-        </div>
-      </Section>
+      {/* NAVBAR */}
+      <Navbar />
 
-      {/* 2. Capabilities */}
-      <Section>
-        <div className="mb-12 border-b border-border pb-4">
-          <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">Capabilities</h2>
-        </div>
-        <Grid cols={3}>
-          <Capability 
-            icon={<Network className="w-5 h-5"/>}
-            title="Systems Architecture"
-            description="Runtime overhead analysis, memory usage patterns, and native vs web execution tradeoffs."
-          />
-          <Capability 
-            icon={<Cpu className="w-5 h-5"/>}
-            title="AI Agents & Automation"
-            description="System integration over model usage. Autonomous workflows, behavior automation, and human-AI loops."
-          />
-          <Capability 
-            icon={<TerminalIcon className="w-5 h-5"/>}
-            title="Developer Tooling"
-            description="CLI tools, memory visualizers, and experimental build systems for modern engineering teams."
-          />
-          <Capability 
-            icon={<Zap className="w-5 h-5"/>}
-            title="Performance Engineering"
-            description="Low-overhead software approaches. We prioritize understanding constraints over convenience."
-          />
-          <Capability 
-            icon={<Beaker className="w-5 h-5"/>}
-            title="Research Prototypes"
-            description="Rapid iteration to answer technical questions about software behavior and limits."
-          />
-        </Grid>
-      </Section>
+      {/* ═══════════════════════════════════════════════════════ */}
+      {/* PHASE 1: THE HOOK (HERO)                               */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <section id="mission-control" className="min-h-screen flex flex-col justify-center relative px-6 md:px-12 py-32 overflow-hidden">
+        
+        {/* Background Effects */}
+        <div className="absolute inset-0 dot-grid opacity-40 pointer-events-none" />
+        <div className="absolute top-1/2 left-1/3 w-[600px] h-[600px] rounded-full bg-emerald-500/[0.07] blur-[120px] animate-gradient-shift pointer-events-none" />
+        <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-blue-500/[0.05] blur-[100px] animate-gradient-shift pointer-events-none" style={{ animationDelay: "4s" }} />
+        <div className="absolute inset-0 noise pointer-events-none" />
 
-      {/* 4. Engineering Philosophy (Moved up as it builds trust) */}
-      <Section className="bg-muted/5">
-        <div className="grid md:grid-cols-2 gap-16">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-6">Philosophy</h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-              We treat software as a system, not a feature. Projects begin as questions rather than product ideas, and development is treated as an investigation process.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-sm">
-              <div className="flex items-center gap-2">
-                <span className="text-accent-foreground">→</span> Reasoning over frameworks
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-accent-foreground">→</span> Constraints over convenience
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-accent-foreground">→</span> Understanding over speed
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-accent-foreground">→</span> Experiments over assumptions
-              </div>
-            </div>
-          </div>
-          <div className="text-sm text-muted-foreground space-y-4 font-mono border-l border-border pl-6">
-            <p>
-              "The objective is to learn how software behaves under real conditions — memory usage, execution flow, user interaction, automation behavior, and architecture limits."
-            </p>
-            <p className="pt-4">
-              — Team Xebec Manifesto
-            </p>
-          </div>
-        </div>
-      </Section>
-
-      {/* 3. Projects */}
-      <Section>
-        <div className="mb-12 border-b border-border pb-4 flex justify-between items-end">
-          <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">Engineering Logs / Projects</h2>
-          <span className="text-xs font-mono text-muted-foreground">INDEX-2026</span>
-        </div>
-        <div className="space-y-0">
-          <ProjectItem 
-            name="GhostFence"
-            description="AI Phishing Detection System focusing on intent understanding rather than keywords."
-            stack={["Python", "LLM Integration", "Trust Analysis"]}
-            challenge="Building a system that understands manipulative intent in secure communications."
-            href="#"
-          />
-          <ProjectItem 
-            name="ByteWise"
-            description="Memory Layout Visualizer showing padding, alignment, and wasted memory."
-            stack={["C++", "Visualization", "Compiler Internals"]}
-            challenge="Visualizing invisible compiler optimization decisions for educational purposes."
-            href="#"
-          />
-          <ProjectItem 
-            name="LinkedIn Automator"
-            description="System that reads conversations and responds intelligently using simulated human behavior."
-            stack={["Puppeteer", "AI Agents", "Behavior Modelling"]}
-            challenge="At what point does automation represent the user authentically?"
-            href="#"
-          />
-           <ProjectItem 
-            name="Local AI Assistant"
-            description="On-device language model execution for mobile hardware."
-            stack={["Mobile Systems", "Edge AI", "Latency Optimization"]}
-            challenge="Balancing resource usage and response latency on constrained devices."
-            href="#"
-          />
-           <ProjectItem 
-            name="DocuUnderstand"
-            description="Extracting structured information from unstructured PDFs using layout semantics."
-            stack={["Computer Vision", "NLP", "Structured Data"]}
-            challenge="Going beyond OCR to understand spatial and semantic layout of documents."
-            href="#"
-          />
-        </div>
-      </Section>
-
-      {/* 5. Interactive Demo */}
-      <Section>
-         <div className="mb-8 border-b border-border pb-4">
-          <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">Live Inference Demo</h2>
-        </div>
-        <DemoPanel />
-      </Section>
-
-      {/* 6. About */}
-      <Section className="border-t border-border mt-20">
-        <div className="grid md:grid-cols-4 gap-12">
-          <div className="md:col-span-1">
-            <h3 className="font-bold text-lg mb-2">Team Xebec</h3>
-            <p className="text-sm text-muted-foreground">Student Engineering Collective</p>
-          </div>
-          <div className="md:col-span-2 text-sm text-muted-foreground leading-relaxed">
-            <p className="mb-4">
-              Team Xebec is a student-driven engineering group that builds experimental software systems through hackathons, research projects, and architectural explorations.
-            </p>
-            <p>
-              We prioritize native performance and deep understanding of system internals.
-            </p>
-          </div>
-          <div className="md:col-span-1">
-             <div className="glass-panel p-6 rounded-sm border border-border bg-muted/5 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent pointer-events-none" />
-                <h4 className="text-xs font-mono uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  Recruitment Protocol
-                </h4>
-                <p className="text-sm mb-4">
-                  We are actively seeking engineers who can demonstrate deep understanding of system architecture.
-                </p>
-                <div className="text-xs font-mono text-muted-foreground mb-4">
-                  // STATUS: OPEN
-                  <br/>
-                  // PROTOCOL: AGENT_VETTING
+        <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center relative z-10">
+            
+            {/* Left: Narrative */}
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="relative z-10"
+            >
+                <div className="flex items-center gap-3 mb-8">
+                     <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground/80">
+                        System Status: Online
+                    </span>
                 </div>
+                
+                <h1 className="text-[clamp(3rem,6vw+1rem,5rem)] font-semibold tracking-[-0.03em] leading-[1.05] mb-8">
+                    <span className="gradient-text">The new standard</span> for{" "}
+                    <span className="text-foreground">intelligent software systems.</span>
+                </h1>
+                
+                <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed mb-10">
+                    Team Xebec builds infrastructure, tooling, and applied AI systems focused on performance, architecture, and real-world reliability.
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                    {["SYSTEMS_ARCH", "AGENTIC_AI", "LOW_LATENCY", "OPEN_SOURCE"].map((tag) => (
+                      <span key={tag} className="px-3 py-1.5 border border-border/50 bg-white/[0.02] rounded-full text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground/50 hover:text-emerald-400 hover:border-emerald-500/30 transition-all duration-300 cursor-default">
+                        {tag}
+                      </span>
+                    ))}
+                </div>
+            </motion.div>
+
+            {/* Right: Visual */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="flex justify-center md:justify-end"
+            >
+                <PerspectiveStack />
+            </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════ */}
+      {/* PHASE 2: THE MECHANISM (SYSTEM ARCHITECTURE)           */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <section id="architecture" className="py-40 px-6 md:px-12 max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-24"
+        >
+             <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground/60 mb-6">System Architecture</h2>
+             <p className="text-3xl md:text-4xl font-medium tracking-tight text-foreground/80 max-w-2xl">
+                We engineer across the full stack of modern intelligence, from bare-metal optimization to cognitive agent workflows.
+             </p>
+        </motion.div>
+        
+        <BentoGrid>
+            <BentoCard 
+                colSpan={2}
+                title="Intelligence Layer"
+                subtitle="Autonomous Agents"
+                icon={<Cpu className="w-5 h-5"/>}
+            >
+                Building self-reasoning agent swarms capable of complex task execution. 
+                Focusing on <span className="text-foreground">GhostFence</span> and <span className="text-foreground">Jassos</span> for security and automation.
+            </BentoCard>
+            
+            <BentoCard 
+                title="Infrastructure"
+                subtitle="Low-Level"
+                icon={<Zap className="w-5 h-5"/>}
+            >
+                Runtime analysis and memory optimization. See <span className="text-foreground">ByteWise</span>.
+            </BentoCard>
+
+             <BentoCard 
+                title="Human-Mimetic Interface"
+                subtitle="Simulation"
+                icon={<Activity className="w-5 h-5"/>}
+            >
+                Systems that understand and replicate human behavior patterns.
+            </BentoCard>
+
+            <BentoCard 
+                colSpan={2}
+                title="Applied Research"
+                subtitle="Innovation Lab"
+                icon={<Network className="w-5 h-5"/>}
+            >
+               Continually iterating on novel architectures. Winners of Smart India Hackathon 2025.
+               Active research into digital-physical bridging systems.
+            </BentoCard>
+        </BentoGrid>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════ */}
+      {/* PHASE 3: AWARDS & RECOGNITION                          */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <div id="awards">
+        <AwardsSection />
+      </div>
+
+
+      {/* ═══════════════════════════════════════════════════════ */}
+      {/* PHASE 4: THE PROOF (ENGINEERING LOGS)                  */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <section id="projects" className="py-40 px-6 md:px-12 max-w-7xl mx-auto">
+         <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.6 }}
+           className="mb-24 flex items-end justify-between"
+         >
+             <div>
+                <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground/60 mb-6">Engineering Logs</h2>
+                <p className="text-3xl font-medium tracking-tight text-foreground/80">
+                    System Modules & Deployed Code
+                </p>
              </div>
-          </div>
+             <div className="hidden md:block text-xs font-mono text-muted-foreground">
+                INDEX_V.2.0.4
+             </div>
+        </motion.div>
+
+        <div className="space-y-0 border-b border-border">
+            <SpecSheet 
+                id="MOD_01"
+                name="GhostFence"
+                role="Intent Analysis Engine"
+                stack={["Python", "LLM", "Security"]}
+                status="active"
+                github="https://github.com/HiwarkhedePrasad/GhostFence"
+            />
+            <SpecSheet 
+                id="MOD_02"
+                name="ByteWise"
+                role="Memory Layout Visualizer"
+                stack={["C++", "Compiler Tech", "WASM"]}
+                status="active"
+                github="https://github.com/HiwarkhedePrasad/ByteWise"
+            />
+            <SpecSheet 
+                id="MOD_03"
+                name="DocuUnderstand"
+                role="Spatial Semantic Extraction"
+                stack={["Vision", "NLP", "RAG"]}
+                status="active"
+                github="https://github.com/HiwarkhedePrasad/DocuUnderstand"
+            />
+            <SpecSheet 
+                id="MOD_04"
+                name="LinkedIn Automator"
+                role="Behavioral Simulation"
+                stack={["Puppeteer", "Heuristic Logic"]}
+                status="in-progress"
+                github="https://github.com/HiwarkhedePrasad/LinkedIn-Automator"
+            />
+             <SpecSheet 
+                id="MOD_05"
+                name="Local AI"
+                role="Edge Inference Optimization"
+                stack={["ONNX", "Mobile", "Performance"]}
+                status="in-progress"
+                github="https://github.com/HiwarkhedePrasad/Local-AI"
+            />
         </div>
         
-        <div className="mt-16">
-            <JoinForm />
+        <div className="mt-12 text-center">
+             <Link href="https://github.com/HiwarkhedePrasad" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-mono text-muted-foreground hover:text-emerald-400 transition-colors border-b border-transparent hover:border-emerald-500/40 pb-1">
+                <TerminalIcon className="w-4 h-4"/> VIEW_ALL_REPOSITORIES
+                <ExternalLink className="w-3 h-3 opacity-50" />
+             </Link>
         </div>
-      </Section>
 
-      {/* 7. Footer */}
-      <footer className="border-t border-border py-12">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-xs text-muted-foreground font-mono">
-            © 2026 Team Xebec. All systems nominal.
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════ */}
+      {/* PHASE 5: THE ENGINEERS (TEAM)                          */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <div id="team">
+        <TeamSection />
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════ */}
+      {/* PHASE 6: THE ACTION (RECRUITMENT)                      */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <section id="join" className="py-32 relative overflow-hidden">
+         <div className="max-w-4xl mx-auto relative z-10">
+            <JoinForm />
+         </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════ */}
+      {/* FOOTER                                                 */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <footer className="relative bg-background">
+        
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+            
+            {/* Col 1: Brand */}
+            <div>
+              <div className="flex items-center gap-2.5 mb-4">
+                <span className="relative flex h-2 w-2">
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span className="text-sm font-mono font-bold tracking-[0.15em] uppercase">XEBEC</span>
+              </div>
+              <p className="text-sm text-muted-foreground/60 leading-relaxed max-w-xs">
+                Building the next generation of intelligent software systems. Open source, performance-first, architecture-driven.
+              </p>
+            </div>
+
+            {/* Col 2: Quick Links */}
+            <div>
+              <h4 className="text-xs font-mono uppercase tracking-[0.15em] text-muted-foreground/40 mb-4">Navigate</h4>
+              <div className="flex flex-col gap-3">
+                {[
+                  { label: "Architecture", href: "#architecture" },
+                  { label: "Projects", href: "#projects" },
+                  { label: "Team", href: "#team" },
+                  { label: "Join Us", href: "#join" },
+                ].map((link) => (
+                  <a key={link.href} href={link.href} className="text-sm text-muted-foreground/50 hover:text-foreground transition-colors w-fit">
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Col 3: Connect */}
+            <div>
+              <h4 className="text-xs font-mono uppercase tracking-[0.15em] text-muted-foreground/40 mb-4">Connect</h4>
+              <div className="flex flex-col gap-3">
+                <Link href="https://github.com/HiwarkhedePrasad" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground/50 hover:text-foreground transition-colors w-fit">
+                  <Github className="w-4 h-4" /> GitHub
+                </Link>
+                <Link href="https://www.linkedin.com/company/team-xebec/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground/50 hover:text-foreground transition-colors w-fit">
+                  <Linkedin className="w-4 h-4" /> LinkedIn
+                </Link>
+                <Link href="mailto:contact@teamxebec.dev" className="flex items-center gap-2 text-sm text-muted-foreground/50 hover:text-foreground transition-colors w-fit">
+                  <Mail className="w-4 h-4" /> Contact
+                </Link>
+              </div>
+            </div>
+
           </div>
-          <div className="flex gap-6 text-sm font-medium text-muted-foreground">
-            <Link href="#" className="hover:text-foreground transition-colors flex items-center gap-2">
-              <FileText className="w-4 h-4" /> Docs
-            </Link>
-            <Link href="#" className="hover:text-foreground transition-colors flex items-center gap-2">
-              <Github className="w-4 h-4" /> GitHub
-            </Link>
-            <Link href="#" className="hover:text-foreground transition-colors flex items-center gap-2">
-              <Mail className="w-4 h-4" /> Contact
-            </Link>
+
+          {/* Bottom bar */}
+          <div className="mt-16 pt-8 border-t border-border/30 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-xs font-mono text-muted-foreground/30">
+                © {new Date().getFullYear()} TEAM XEBEC LABS. All rights reserved.
+            </div>
+            <div className="text-xs font-mono text-muted-foreground/20">
+                Engineered with precision.
+            </div>
           </div>
         </div>
       </footer>
-    </main>
-  );
-}
 
-function Capability({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
-  return (
-    <div className="group p-6 border border-border/50 hover:border-foreground/20 hover:bg-muted/5 transition-all rounded-sm">
-      <div className="mb-4 text-muted-foreground group-hover:text-foreground transition-colors">
-        {icon}
-      </div>
-      <h3 className="text-lg font-medium mb-2 tracking-tight">{title}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {description}
-      </p>
-    </div>
+    </main>
   );
 }

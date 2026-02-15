@@ -51,7 +51,7 @@ export function JoinForm() {
   return (
     <div className="relative w-full overflow-hidden">
       
-      <div className="relative z-10 border-t border-b border-border bg-background/50 backdrop-blur-sm py-24">
+      <div className="relative z-10 py-24">
         <div className="max-w-4xl mx-auto px-6">
             
             <AnimatePresence mode="wait">
@@ -61,39 +61,42 @@ export function JoinForm() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="text-center md:text-left"
+                        className="w-full"
                     >
-                        <div className="flex flex-col md:flex-row gap-12 items-center">
-                            <div className="flex-1">
-                                <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 leading-none">
-                                    DEPLOY YOUR <br/>
-                                    <span className="text-muted-foreground">INTELLIGENCE.</span>
-                                </h2>
-                                <p className="text-xl md:text-2xl text-muted-foreground/80 max-w-xl leading-relaxed mb-8">
-                                    We don't hire. We recruit system architects to build the next generation of autonomous infrastructure through open source contributions.
-                                </p>
-                                
-                                <div className="flex flex-col sm:flex-row gap-4">
-                                    <button
-                                        onClick={() => setStep("form")}
-                                        className="group h-14 px-8 bg-foreground text-background text-lg font-medium tracking-tight flex items-center justify-center gap-3 hover:bg-neutral-200 transition-colors"
-                                    >
-                                        Initialize Protocol
-                                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                    <div className="h-14 px-6 border border-border flex items-center gap-3 text-sm text-muted-foreground font-mono bg-muted/5">
-                                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                        RECRUITMENT: OPEN
-                                    </div>
+                        <div className="grid md:grid-cols-2 gap-12 items-center">
+                            {/* Left Column: Text & Context */}
+                            <div className="text-left space-y-8">
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 border border-emerald-500/20 bg-emerald-500/[0.05] rounded-full text-xs font-mono uppercase tracking-wider text-emerald-400">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                    Recruitment: Open
                                 </div>
+
+                                <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
+                                    Want to build the{" "}
+                                    <span className="gradient-text">next big thing?</span>
+                                </h2>
+                                
+                                <p className="text-lg text-muted-foreground/70 leading-relaxed max-w-md">
+                                    We're looking for engineers who care about architecture, performance, and shipping real systems. Join us and contribute to open source projects that matter.
+                                </p>
                             </div>
 
-                            {/* Decorative Agents/Skills visual */}
-                            <div className="hidden md:grid grid-cols-2 gap-4 opacity-50 select-none pointer-events-none">
-                                <SkillCard icon={<Cpu />} label="System Design" />
-                                <SkillCard icon={<Network />} label="Distributed Logic" />
-                                <SkillCard icon={<Zap />} label="Low Latency" />
-                                <SkillCard icon={<Terminal />} label="Automation" />
+                            {/* Right Column: CTA & Skills */}
+                            <div className="flex flex-col items-start gap-8 md:pl-12 border-l border-border/30">
+                                <button
+                                    onClick={() => setStep("form")}
+                                    className="group h-14 px-10 bg-foreground text-background text-base font-medium tracking-tight rounded-lg inline-flex items-center justify-center gap-3 hover:bg-neutral-200 transition-all duration-300 hover:shadow-lg hover:shadow-white/5 w-full md:w-auto"
+                                >
+                                    Get Started
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </button>
+
+                                <div className="flex flex-wrap gap-3">
+                                    <SkillCard icon={<Cpu className="w-4 h-4" />} label="System Design" />
+                                    <SkillCard icon={<Network className="w-4 h-4" />} label="Distributed Logic" />
+                                    <SkillCard icon={<Zap className="w-4 h-4" />} label="Low Latency" />
+                                    <SkillCard icon={<Terminal className="w-4 h-4" />} label="Automation" />
+                                </div>
                             </div>
                         </div>
                     </motion.div>

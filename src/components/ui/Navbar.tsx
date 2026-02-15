@@ -6,10 +6,11 @@ import { Github } from "lucide-react";
 import Link from "next/link";
 
 const navLinks = [
-  { label: "Architecture", href: "#architecture" },
-  { label: "Projects", href: "#projects" },
-  { label: "Team", href: "#team" },
-  { label: "Join", href: "#join" },
+  { label: "Architecture", href: "/#architecture" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Ideas", href: "/ideas" },
+  { label: "Team", href: "/#team" },
+  { label: "Join", href: "/#join" },
 ];
 
 export function Navbar() {
@@ -46,15 +47,16 @@ export function Navbar() {
         {/* Center Links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-xs font-mono uppercase tracking-[0.15em] text-muted-foreground/60 hover:text-foreground transition-colors duration-300 relative group"
             >
               {link.label}
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-emerald-500 group-hover:w-full transition-all duration-300" />
-            </a>
+            </Link>
           ))}
+
         </div>
 
         {/* Right CTA */}

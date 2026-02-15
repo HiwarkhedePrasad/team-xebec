@@ -34,7 +34,7 @@ export function Terminal() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <span className="text-accent-foreground/50 mr-2">$</span>
+          <span className="text-accent-foreground/50 mr-2">[INFO]</span>
           {line}
         </motion.div>
       ))}

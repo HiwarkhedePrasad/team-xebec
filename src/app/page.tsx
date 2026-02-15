@@ -18,6 +18,7 @@ import { Terminal } from "@/components/ui/Terminal";
 import { Grid } from "@/components/ui/Grid";
 import { ProjectItem } from "@/components/ui/ProjectItem";
 import { DemoPanel } from "@/components/ui/DemoPanel";
+import { JoinForm } from "@/components/ui/JoinForm";
 
 export default function Home() {
   return (
@@ -194,12 +195,26 @@ export default function Home() {
             </p>
           </div>
           <div className="md:col-span-1">
-            <h4 className="text-xs font-mono uppercase tracking-wider text-muted-foreground mb-4">Core Member</h4>
-            <div className="space-y-2">
-              <div className="text-sm font-medium">Prasad Hiwarkhede</div>
-              <div className="text-xs text-muted-foreground">Systems & AI Developer</div>
-            </div>
+             <div className="glass-panel p-6 rounded-sm border border-border bg-muted/5 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent pointer-events-none" />
+                <h4 className="text-xs font-mono uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  Recruitment Protocol
+                </h4>
+                <p className="text-sm mb-4">
+                  We are actively seeking engineers who can demonstrate deep understanding of system architecture.
+                </p>
+                <div className="text-xs font-mono text-muted-foreground mb-4">
+                  // STATUS: OPEN
+                  <br/>
+                  // PROTOCOL: AGENT_VETTING
+                </div>
+             </div>
           </div>
+        </div>
+        
+        <div className="mt-16">
+            <JoinForm />
         </div>
       </Section>
 
